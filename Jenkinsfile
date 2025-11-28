@@ -2,50 +2,83 @@ pipeline {
     agent any
 
     environment {
-        IMAGE_NAME = 'kovacsmarci46/chat-app'
-        KUBECONFIG_CRED = 'kubeconfig'
+        // Docker Hub image name
+        IMAGE_NAME = "kovacsmarci/chat-app"
+        // Kubernetes kubeconfig credential ID (for later GKE deploy)
+        KUBECONFIG_CRED = "kubeconfig"
     }
 
     stages {
-        stage('Checkout') {
+        stage('Build & Test') {
             steps {
-                git 'https://github.com/kovacsmmarci/firebase-chat.git'
-            }
-        }
+                // Code is already checked out by "Declarative: Checkout SCM"
+                sh '''
+                  echo "Node version:"
+                  node -v || true
 
-        stage('Install Dependencies') {
-            steps {
-                sh 'npm install'
-            }
-        }
+                  echo "Installing dependencies..."
+                  if [ -f package-lock.json ]; then
+                    npm ci
+                  else
+                    npm install
+                  fi
 
-        stage('Build React App') {
-            steps {
-                sh 'npm run build'
+                  echo "Building React app..."
+                  npm run build
+                '''
             }
         }
 
         stage('Build Docker Image') {
             steps {
-                sh "docker build -t $IMAGE_NAME:latest ."
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
-                    sh "docker push $IMAGE_NAME:latest"
+                script {
+                    sh """
+                      echo "Building Docker image ${IMAGE_NAME}:${env.BUILD_NUMBER}..."
+                      docker build -t ${IMAGE_NAME}:${env.BUILD_NUMBER} -t ${IMAGE_NAME}:latest .
+                    """
                 }
             }
         }
 
-        stage('Deploy to GKE') {
+        stage('Push to Docker Hub') {
             steps {
-                withCredentials([file(credentialsId: KUBECONFIG_CRED, variable: 'KUBECONFIG')]) {
-                    sh 'kubectl apply -f k8s/deployment.yaml'
-                    sh 'kubectl apply -f k8s/service.yaml'
+                script {
+                    withDockerRegistry([credentialsId: 'dockerhub-creds', url: '']) {
+                        sh """
+                          echo "Pushing Docker image to Docker Hub..."
+                          docker push ${IMAGE_NAME}:${env.BUILD_NUMBER}
+                          docker push ${IMAGE_NAME}:latest
+                        """
+                    }
+                }
+            }
+        }
+
+        stage('Deploy to Kubernetes (GKE)') {
+            when {
+                expression { return false } // TODO: set to true later when GKE + kubeconfig are ready
+            }
+            steps {
+                script {
+                    withCredentials([file(credentialsId: KUBECONFIG_CRED, variable: 'KUBECONFIG')]) {
+                        sh '''
+                          echo "Deploying to Kubernetes..."
+                          kubectl apply -f k8s/deployment.yaml
+                          kubectl apply -f k8s/service.yaml
+                        '''
+                    }
                 }
             }
         }
     }
+
+    post {
+        success {
+            echo "Build ${env.BUILD_NUMBER} complete. Image: ${IMAGE_NAME}:${env.BUILD_NUMBER}"
+        }
+        failure {
+            echo "Build failed. Check logs for details."
+        }
+    }
 }
+
