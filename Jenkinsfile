@@ -35,21 +35,25 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes (GKE)') {
-            when {
-                expression { return false } // enable later when GKE is ready
-            }
-            steps {
-                script {
-                    withCredentials([file(credentialsId: KUBECONFIG_CRED, variable: 'KUBECONFIG')]) {
-                        sh '''
-                          echo "Deploying to Kubernetes..."
-                          kubectl apply -f k8s/deployment.yaml
-                          kubectl apply -f k8s/service.yaml
-                        '''
-                    }
+	    steps {
+		script {
+		    withCredentials([file(credentialsId: KUBECONFIG_CRED, variable: 'KUBECONFIG')]) {
+                        withEnv(['USE_GKE_GCLOUD_AUTH_PLUGIN=True']) {
+                             sh '''
+                     	       echo "Deploying to Kubernetes..."
+                     	       kubectl apply -f k8s/deployment.yaml
+                               kubectl apply -f k8s/service.yaml
+                               echo "Pods:"
+                               kubectl get pods
+                               echo "Services:"
+                               kubectl get svc chat-app-service
+                             '''
+                     }
                 }
             }
         }
+    }
+
     }
 
     post {
