@@ -1,0 +1,23 @@
+# Node
+node_modules
+npm-debug.log*
+yarn.lock
+package-lock.json
+
+# Build output
+dist
+build
+
+# Firebase / tooling
+.firebase
+.firebase-tools*
+.firebaserc
+
+# Google Cloud SDK / installers
+google-cloud-sdk
+google-cloud-cli-*.tar.gz
+
+# Misc
+.env
+.DS_Store
+

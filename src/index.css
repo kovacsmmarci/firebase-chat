@@ -1,0 +1,188 @@
+/* src/index.css - base + auth styles */
+:root{
+  --bg: #f6f8fa;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --primary: #2563eb;
+  --primary-600: #1e40af;
+  --accent: #06b6d4;
+  --success: #16a34a;
+  --danger: #ef4444;
+  --glass: rgba(255,255,255,0.6);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+}
+
+* { box-sizing: border-box; }
+html,body,#root { height:100%; }
+body {
+  margin:0;
+  background: linear-gradient(180deg, #eef2ff 0%, #f6f8fa 100%);
+  color: #0f172a;
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+}
+
+/* App shell */
+.app {
+  max-width: 1000px;
+  margin: 28px auto;
+  padding: 24px;
+  min-height: calc(100vh - 56px);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Header */
+.header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+/* Messages / chat area */
+.messages { height: 60vh; overflow:auto; padding: 12px; border: 1px solid #eee; border-radius: 6px; background: #fafafa; display:flex; flex-direction:column; gap:8px; }
+.message { padding: 10px; margin-bottom: 8px; border-radius: 10px; max-width: 70%; box-shadow: 0 1px 0 rgba(2,6,23,0.04); }
+.message.self { background: #e6ffe6; align-self: flex-end; }
+.message.other { background: #fff; align-self: flex-start; }
+.input-area { display:flex; gap:8px; margin-top:12px; align-items:center; }
+
+/* AUTH CARD */
+.auth-root {
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height: 56vh;
+}
+
+.auth-card {
+  width: 420px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.95));
+  border-radius: 12px;
+  padding: 22px;
+  box-shadow: 0 10px 30px rgba(2,6,23,0.08);
+  border: 1px solid rgba(15,23,42,0.03);
+  backdrop-filter: blur(6px);
+}
+
+.auth-header {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom: 12px;
+}
+.auth-logo {
+  width:44px;
+  height:44px;
+  border-radius:10px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background: linear-gradient(135deg,var(--primary),var(--accent));
+  color: white;
+  font-weight:700;
+  box-shadow: 0 6px 18px rgba(37,99,235,0.12);
+}
+.auth-title { font-size:18px; font-weight:600; }
+.auth-sub { color:var(--muted); font-size:13px; }
+
+.form-row { display:flex; flex-direction:column; gap:6px; margin-top:12px; }
+.input {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #e6e9ef;
+  background: #fff;
+  outline: none;
+  font-size:14px;
+  transition: box-shadow .12s, border-color .12s, transform .06s;
+}
+.input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 6px 20px rgba(37,99,235,0.08);
+  transform: translateY(-1px);
+}
+
+.row { display:flex; gap:8px; align-items:center; justify-content:space-between; margin-top:10px; }
+.helper { color:var(--muted); font-size:13px; }
+
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight:600;
+  font-size:14px;
+  display:inline-flex;
+  align-items:center;
+  gap:10px;
+  justify-content:center;
+}
+
+.btn-primary {
+  background: linear-gradient(180deg,var(--primary),var(--primary-600));
+  color: #fff;
+  box-shadow: 0 8px 26px rgba(37,99,235,0.14);
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(2,6,23,0.06);
+  color: var(--muted);
+}
+
+.divider {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin:16px 0;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex:1;
+  height:1px;
+  background: linear-gradient(90deg, rgba(2,6,23,0.03), rgba(2,6,23,0.06));
+}
+.divider span { color:var(--muted); font-size:13px }
+
+/* Google button specifics */
+.google-btn {
+  background: #fff;
+  border: 1px solid #e6e9ef;
+  color: #111827;
+  padding: 10px 12px;
+  border-radius: 10px;
+  display:flex;
+  align-items:center;
+  gap:10px;
+  width:100%;
+  justify-content:center;
+  font-weight:600;
+}
+
+/* small text + link */
+.small {
+  font-size:13px;
+  color:var(--muted);
+}
+.link {
+  color:var(--primary);
+  text-decoration:none;
+  font-weight:600;
+  cursor:pointer;
+}
+
+/* error badge */
+.error {
+  margin-top:8px;
+  background: linear-gradient(90deg, rgba(239,68,68,0.06), rgba(239,68,68,0.04));
+  color: var(--danger);
+  padding:8px 10px;
+  border-radius:8px;
+  border: 1px solid rgba(239,68,68,0.08);
+  font-size:13px;
+}
+
+/* responsiveness */
+@media (max-width:480px){
+  .auth-card { width: 94%; padding:16px; }
+}
