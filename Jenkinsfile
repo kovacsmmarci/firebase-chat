@@ -9,26 +9,6 @@ pipeline {
     }
 
     stages {
-        stage('Build & Test') {
-            steps {
-                // Code is already checked out by "Declarative: Checkout SCM"
-                sh '''
-                  echo "Node version:"
-                  node -v || true
-
-                  echo "Installing dependencies..."
-                  if [ -f package-lock.json ]; then
-                    npm ci
-                  else
-                    npm install
-                  fi
-
-                  echo "Building React app..."
-                  npm run build
-                '''
-            }
-        }
-
         stage('Build Docker Image') {
             steps {
                 script {
@@ -56,7 +36,7 @@ pipeline {
 
         stage('Deploy to Kubernetes (GKE)') {
             when {
-                expression { return false } // TODO: set to true later when GKE + kubeconfig are ready
+                expression { return false } // enable later when GKE is ready
             }
             steps {
                 script {
