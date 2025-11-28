@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         // Docker Hub image name
-        IMAGE_NAME = "kovacsmarci/chat-app"
+        IMAGE_NAME = "kovacsmarci46/chat-app"
         // Kubernetes kubeconfig credential ID (for later GKE deploy)
         KUBECONFIG_CRED = "kubeconfig"
     }
