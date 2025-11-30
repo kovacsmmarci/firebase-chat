@@ -35,24 +35,30 @@ pipeline {
         }
 
         stage('Deploy to Kubernetes (GKE)') {
-	    steps {
-		script {
-		    withCredentials([file(credentialsId: KUBECONFIG_CRED, variable: 'KUBECONFIG')]) {
+            steps {
+                script {
+                    withCredentials([file(credentialsId: KUBECONFIG_CRED, variable: 'KUBECONFIG')]) {
                         withEnv(['USE_GKE_GCLOUD_AUTH_PLUGIN=True']) {
-                             sh '''
-                     	       echo "Deploying to Kubernetes..."
-                     	       kubectl apply -f k8s/deployment.yaml
-                               kubectl apply -f k8s/service.yaml
-                               echo "Pods:"
-                               kubectl get pods
-                               echo "Services:"
-                               kubectl get svc chat-app-service
-                             '''
-                     }
+                            sh """
+                              echo 'Applying base manifests...'
+                              kubectl apply -f k8s/deployment.yaml
+                              kubectl apply -f k8s/service.yaml
+        
+                              echo 'Updating deployment image to this build...'
+                              kubectl set image deployment/chat-app chat-app=${IMAGE_NAME}:${env.BUILD_NUMBER} --record
+        
+                              echo 'Waiting for rollout to finish...'
+                              kubectl rollout status deployment/chat-app
+        
+                              echo 'Current pods:'
+                              kubectl get pods
+                            """
+                        }
+                    }
                 }
             }
-        }
-    }
+}
+
 
     }
 
