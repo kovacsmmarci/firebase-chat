@@ -57,7 +57,7 @@ export default function Auth(){
         <div className="auth-header">
           <div className="auth-logo">FC</div>
           <div>
-            <div className="auth-title">Firebase Chat</div>
+            <div className="auth-title">Firebase Chat with módosítás</div>
           </div>
         </div>
 
