@@ -9,6 +9,22 @@ pipeline {
     }
 
     stages {
+        stage('Run unit tests') {
+            steps {
+                script {
+                    sh '''
+                    echo "Installing dependencies and running tests..."
+                    if [ -f package-lock.json ]; then
+                        npm ci
+                    else
+                        npm install
+                    fi
+                    npm run test:ci
+                    '''
+                }
+            }
+        }
+
         stage('Build Docker Image') {
             steps {
                 script {
