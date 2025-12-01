@@ -72,10 +72,7 @@ pipeline {
                     }
                 }
             }
-}
-
-
-    }
+        }
 
     post {
         success {
