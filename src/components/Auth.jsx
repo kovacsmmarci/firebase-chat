@@ -58,6 +58,7 @@ export default function Auth(){
           <div className="auth-logo">FC</div>
           <div>
             <div className="auth-title">Chat App</div>
+            <p>Sign in to start chatting!</p>
           </div>
         </div>
 
@@ -128,7 +129,7 @@ export default function Auth(){
 
           <div className="divider"><span>or</span></div>
 
-          <button className="google-btn" onClick={googleSignIn} disabled={loading} aria-label="Sign in with Google">
+          <button className="google-btn" data-testid="google-login-button" onClick={googleSignIn} disabled={loading} aria-label="Sign in with Google">
             <svg width="18" height="18" viewBox="0 0 48 48" fill="none" aria-hidden>
               <path fill="#EA4335" d="M24 9.5c3.9 0 7.1 1.5 9.3 3.5L38.2 7C34.3 3.6 29.4 1.5 24 1.5 14.9 1.5 6.9 7.9 3.1 15.9l9.7 7.5C14.3 16.2 18.7 9.5 24 9.5z"/>
               <path fill="#34A853" d="M46.5 24.5c0-1.5-.1-2.9-.4-4.3H24v8.2h12.7c-.5 2.8-2.1 5.1-4.6 6.7l7.1 5.5C44.6 36.1 46.5 30.7 46.5 24.5z"/>
