@@ -8,22 +8,21 @@ pipeline {
         KUBECONFIG_CRED = "kubeconfig"
     }
 
-    stages {
-        stage('Run unit tests') {
-            steps {
-                script {
-                    sh '''
-                    echo "Installing dependencies and running tests..."
-                    if [ -f package-lock.json ]; then
-                        npm ci
-                    else
-                        npm install
-                    fi
-                    npm run test:ci
-                    '''
-                }
+    stage('Run unit tests') {
+        steps {
+            script {
+                sh '''
+                echo "Installing dependencies and running tests..."
+                # Ignore any stale package-lock.json in Jenkins workspace
+                rm -f package-lock.json
+
+                npm install
+                npm run test:ci
+                '''
             }
         }
+    }
+
 
         stage('Build Docker Image') {
             steps {
