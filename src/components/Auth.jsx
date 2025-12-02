@@ -58,7 +58,7 @@ export default function Auth(){
           <div className="auth-logo">FC</div>
           <div>
             <div className="auth-title">Chat App</div>
-            <p>Sign in to start chatting with people!</p>
+            <p>Sign in to start chatting modification.</p>
           </div>
         </div>
 
